@@ -23,11 +23,11 @@ namespace ReportGenerationService.Gateways
         /// <returns></returns>
         public Dictionary<string, string[]> GenerateCustomerMarketInfoReport(CustomerPreferencesForm form)
         {
-            var customerPreferences = new Tuple<DateTime, List<string>>[_numberOfDays];
+            var customerPreferences = new Tuple<DateTime, Stack<string>>[_numberOfDays];
 
             for (int i = 0; i < _numberOfDays; i++)
             {
-                customerPreferences[i] = Tuple.Create(DateTime.Now.AddDays(i), new List<string>());
+                customerPreferences[i] = Tuple.Create(DateTime.Now.AddDays(i), new Stack<string>());
             }
 
             foreach (var preference in form.CustomerPreferences)
@@ -40,7 +40,7 @@ namespace ReportGenerationService.Gateways
                     case DayPreferenceType.EveryDay:
                         foreach (var day in customerPreferences)
                         {
-                            day.Item2.Add(preference.Customer);
+                            day.Item2.Push(preference.Customer);
                         }
                         break;
                     case DayPreferenceType.DaysOfWeek:
@@ -50,7 +50,7 @@ namespace ReportGenerationService.Gateways
 
                             foreach (var day in listDays)
                             {
-                                day.Item2.Add(preference.Customer);
+                                day.Item2.Push(preference.Customer);
                             }
                         }
                         break;
@@ -58,7 +58,7 @@ namespace ReportGenerationService.Gateways
                         var specificDates = customerPreferences.Where(t => t.Item1.Day == preference.SpecificMonthDay);
                         foreach (var date in specificDates)
                         {
-                            date.Item2.Add(preference.Customer);
+                            date.Item2.Push(preference.Customer);
                         }
                         break;
                 }
