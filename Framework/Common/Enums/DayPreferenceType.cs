@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ReportGenerationService.Enums
+namespace Framework.Common.Enums
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum DayPreferenceType

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ReportGenerationService.Enums
+namespace Framework.Common.Enums
 {
     // This exists as a hack to be able to pass in string in request body
     [JsonConverter(typeof(JsonStringEnumConverter))]

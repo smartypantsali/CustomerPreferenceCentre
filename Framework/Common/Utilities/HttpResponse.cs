@@ -2,23 +2,43 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportGenerationService.Utilities
+namespace Framework.Common.Utilities
 {
-    public class HttpResponses : ActionResult
+    public class HttpResponse : ActionResult
     {
         public byte[] Content { get; set; }       
         public int StatusCode { get; set; }
 
-        public HttpResponses()
+        public HttpResponse()
         {
         }
 
-        public static HttpResponses TeapotResult(ApiOffence offense, string propertName)
+        public static HttpResponse GetResultFromHttpResponses(HttpResponse[] httpResponses)
         {
-            var res = new HttpResponses();
+            var res = new HttpResponse();
+
+            var obj = new Dictionary<string, object>();
+
+            for (int i = 0; i < httpResponses.Length; i++)
+            {
+                var httpResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(UTF8Encoding.UTF8.GetString(httpResponses[i].Content));
+
+                obj[$"{httpResponse.ElementAt(0).Key} + {i}"] = httpResponse.ElementAt(0).Value;
+            }
+
+            res.Content = UTF8Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
+            res.StatusCode = 418;
+
+            return res;
+        }
+
+        public static HttpResponse TeapotResult(ApiOffence offense, string propertName)
+        {
+            var res = new HttpResponse();
             res.Content = getContent(offense, propertName);
             res.StatusCode = 418;
             return res;

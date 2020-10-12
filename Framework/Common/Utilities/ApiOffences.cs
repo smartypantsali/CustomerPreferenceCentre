@@ -1,4 +1,4 @@
-﻿namespace ReportGenerationService.Utilities
+﻿namespace Framework.Common.Utilities
 {
     public static class ApiOffences
     {

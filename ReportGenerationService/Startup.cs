@@ -1,11 +1,10 @@
+using Framework.Common.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ReportGenerationService.Gateways;
-using ReportGenerationService.Models;
-using ReportGenerationService.ValidationProviders;
+using ReportGenerationService.Api.v1.Models;
 
 namespace ReportGenerationService
 {
@@ -21,8 +20,7 @@ namespace ReportGenerationService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ICustomerPreferencesGateway, CustomerPreferencesGateway>();
-            services.AddScoped<IValidation<CustomerPreferencesForm>, CustomerPreferencesValidations>();
+            services.AddSingleton<IReport<CustomerPreferenceReport, Customer>, CustomerPreferenceReport>();
             services.AddControllers();
         }
 
