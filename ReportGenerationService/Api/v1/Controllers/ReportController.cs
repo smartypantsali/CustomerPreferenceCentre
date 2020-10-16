@@ -13,10 +13,12 @@ namespace ReportGenerationService.Api.v1.Controllers
     public class ReportController : Controller
     {
         private readonly IReport<CustomerPreferenceReport, Customer> _report;
+        private readonly IValidate<Customer> _validate;
 
-        public ReportController(IReport<CustomerPreferenceReport, Customer> report)
+        public ReportController(IReport<CustomerPreferenceReport, Customer> report, IValidate<Customer> validate)
         {
             _report = report;
+            _validate = validate;
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace ReportGenerationService.Api.v1.Controllers
                 return HttpResponse.TeapotResult(ApiOffences.CustomerCannotBeNull, nameof(Customer));
             }
 
-            var valResult = form.Customer.Validate();
+            var valResult = form.Customer.Validate(_validate);
             if (valResult != null)
             {
                 return valResult;
@@ -51,7 +53,7 @@ namespace ReportGenerationService.Api.v1.Controllers
         public ActionResult<CustomerPreferenceReport> GetAllCustomerPreferencesReport(CustomersForm form)
         {
             // Validation
-            var valResult = form.Customers.Select(c => c.Validate())
+            var valResult = form.Customers.Select(c => c.Validate(_validate))
                 .Where(r => r != null).ToArray();
             if (valResult.Count() > 0)
             {

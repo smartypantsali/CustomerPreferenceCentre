@@ -1,7 +1,9 @@
-﻿namespace Framework.Common.Interfaces
+﻿using Framework.Common.Utilities;
+
+namespace Framework.Common.Interfaces
 {
-    public interface IValidate<T>
+    public interface IValidate<T> where T : class
     {
-        T Validate();
+        HttpResponse Validate(T @object);
     }
 }

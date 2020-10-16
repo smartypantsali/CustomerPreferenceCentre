@@ -1,14 +1,11 @@
 ﻿using Framework.Common.Enums;
 using Framework.Common.Interfaces;
 using Framework.Common.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ReportGenerationService.Api.v1.Models;
 
 namespace ReportGenerationService.Api.v1.Interfaces
 {
-    public interface ICustomerPreference : IValidate<HttpResponse>
+    public interface ICustomerPreference
     {
         byte? SpecificMonthDay { get; set; }
 

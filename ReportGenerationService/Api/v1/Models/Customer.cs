@@ -1,22 +1,18 @@
-﻿using Framework.Common.Enums;
-using Framework.Common.Interfaces;
+﻿using Framework.Common.Interfaces;
 using Framework.Common.Utilities;
 using ReportGenerationService.Api.v1.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ReportGenerationService.Api.v1.Models
 {
-    public class Customer : ICustomer, IValidate<HttpResponse>
+    public class Customer : ICustomer
     {
         public CustomerPreference CustomerPreference { get; set; }
 
         public string Name { get; set; }
 
-        public HttpResponse Validate()
+        public HttpResponse Validate(IValidate<Customer> validate)
         {
-            var valResult = CustomerPreference.Validate();
+            var valResult = validate.Validate(this);
             if (valResult != null)
             {
                 return valResult;

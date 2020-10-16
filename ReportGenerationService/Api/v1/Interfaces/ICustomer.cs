@@ -1,4 +1,5 @@
 ﻿using Framework.Common.Interfaces;
+using Framework.Common.Utilities;
 using ReportGenerationService.Api.v1.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace ReportGenerationService.Api.v1.Interfaces
         CustomerPreference CustomerPreference { get; set; }
 
         string Name { get; set; }
+
+        HttpResponse Validate(IValidate<Customer> validate);
 
         CustomerPreferenceReport GenerateSingleCustomerReport(IReport<CustomerPreferenceReport, Customer> report);
 

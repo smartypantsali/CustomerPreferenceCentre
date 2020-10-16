@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReportGenerationService.Api.v1.Models;
+using ReportGenerationService.Api.v1.Validation;
 
 namespace ReportGenerationService
 {
@@ -20,7 +21,9 @@ namespace ReportGenerationService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IReport<CustomerPreferenceReport, Customer>, CustomerPreferenceReport>();
+            services.AddTransient<IReport<CustomerPreferenceReport, Customer>, CustomerPreferenceReport>();
+            services.AddSingleton<IValidate<Customer>, CustomerValidation>();
+            services.AddSingleton<IValidate<CustomerPreference>, CustomerPreferenceValidation>();
             services.AddControllers();
         }
 

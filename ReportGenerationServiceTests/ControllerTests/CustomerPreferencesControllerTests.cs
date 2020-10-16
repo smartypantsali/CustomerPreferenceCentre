@@ -1,13 +1,9 @@
-﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿//using Framework.Common.Enums;
+//using Framework.Common.Interfaces;
+//using Microsoft.VisualStudio.TestTools.UnitTesting;
 //using Moq;
-//using ReportGenerationService.Controllers;
-//using ReportGenerationService.Enums;
-//using ReportGenerationService.Gateways;
-//using ReportGenerationService.Models;
-//using ReportGenerationService.Utilities;
-//using ReportGenerationService.ValidationProviders;
+//using ReportGenerationService.Api.v1.Models;
 //using System.Collections.Generic;
-//using DayOfWeek = ReportGenerationService.Enums.DayOfWeek;
 
 //namespace ReportGenerationServiceTests.ControllerTests
 //{
@@ -15,26 +11,29 @@
 //    public class CustomerPreferencesControllerTests
 //    {
 //        [TestMethod]
-//        public void GetCustomerMarketInfoReport_ValidationError_418()
+//        public void GetAllCustomerPreferencesReport_ValidationError_418()
 //        {
 //            // Arrange
-//            var form = new CustomerPreferencesForm
+//            var form = new CustomersForm
 //            {
-//                CustomerPreferences = new Customer[]
+//                Customers = new Customer[]
 //                {
 //                    new Customer
 //                    {
-//                        Customer = "A",
-//                        SpecificDaysOfWeek = null,
-//                        Type = DayPreferenceType.SpecificDayOfMonth,
-//                        SpecificMonthDay = null
+//                        Name = "A",
+//                        CustomerPreference = new CustomerPreference
+//                        {
+//                            SpecificDaysOfWeek = null,
+//                            Type = DayPreferenceType.SpecificDayOfMonth,
+//                            SpecificMonthDay = null
+//                        }
 //                    }
 //                }
 //            };
 
 //            var mocks = new MockRepository(MockBehavior.Strict);
 
-//            var preferencesValidationMock = mocks.Create<IValidate<CustomerPreferencesForm>>();
+//            var preferencesValidationMock = mocks.Create<IReport<CustomerPreferenceReport, Customer>>();
 //            preferencesValidationMock.Setup(m => m.Validate(It.IsAny<CustomerPreferencesForm>()))
 //                .Returns(HttpResponses.TeapotResult(ApiOffences.SpecificDayOfMonthMustHaveValue, "SpecificMonthDay"));
 
