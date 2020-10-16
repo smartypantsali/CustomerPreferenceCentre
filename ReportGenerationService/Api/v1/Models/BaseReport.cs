@@ -21,7 +21,8 @@ namespace ReportGenerationService.Api.v1.Models
             NumberOfDays = 90;
         }
 
-        public abstract T1 GenerateReport(T2 arg);
-    
+        public abstract T1 GenerateReportForSingle(T2 arg);
+
+        public abstract T1 GenerateReportForAll(T2[] arg);
     }
 }

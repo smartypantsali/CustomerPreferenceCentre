@@ -13,6 +13,11 @@ namespace ReportGenerationService.Api.v1.Interfaces
 
         string Name { get; set; }
 
-        CustomerPreferenceReport GenerateReport(IReport<CustomerPreferenceReport, Customer> report);
+        CustomerPreferenceReport GenerateSingleCustomerReport(IReport<CustomerPreferenceReport, Customer> report);
+
+        static CustomerPreferenceReport GenerateAllCustomersReport(Customer[] customers, IReport<CustomerPreferenceReport, Customer> report)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

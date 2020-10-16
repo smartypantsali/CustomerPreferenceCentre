@@ -1,6 +1,7 @@
 ﻿using Framework.Common.Interfaces;
 using Framework.Common.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using ReportGenerationService.Api.v1.Interfaces;
 using ReportGenerationService.Api.v1.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,29 +20,45 @@ namespace ReportGenerationService.Api.v1.Controllers
         }
 
         /// <summary>
-        /// System which takes customers preferred days to receive marketting information and returns a "report"
+        /// System which takes a single customers preferred days to receive marketting information and returns a "report"
         /// </summary>
         /// <param name="customers"></param>
         /// <returns></returns>
-        [HttpGet("CustomerPreferences")]
-        public ActionResult<CustomerPreferenceReport> GetCustomerPreferencesReport(PreferenceForm preferenceForm)
+        [HttpGet("SingleCustomerPreferences")]
+        public ActionResult<CustomerPreferenceReport> GetSingleCustomerPreferencesReport(CustomersForm form)
         {
-            var res = preferenceForm.Customers.Select(c => c.CustomerPreference.Validate())
+            // Validation
+            if (form.Customer == null)
+            {
+                return HttpResponse.TeapotResult(ApiOffences.CustomerCannotBeNull, nameof(Customer));
+            }
+
+            var valResult = form.Customer.Validate();
+            if (valResult != null)
+            {
+                return valResult;
+            }
+
+            return form.Customer.GenerateSingleCustomerReport(_report);
+        }
+
+        /// <summary>
+        /// System which takes a multiple customers preferred days to receive marketting information and returns a "report"
+        /// </summary>
+        /// <param name="customers"></param>
+        /// <returns></returns>
+        [HttpGet("AllCustomerPreferences")]
+        public ActionResult<CustomerPreferenceReport> GetAllCustomerPreferencesReport(CustomersForm form)
+        {
+            // Validation
+            var valResult = form.Customers.Select(c => c.Validate())
                 .Where(r => r != null).ToArray();
-            if (res != null && res.Count() > 0)
+            if (valResult.Count() > 0)
             {
-                // Return 418 if validation fails
-                return HttpResponse.GetResultFromHttpResponses(res);
+                return HttpResponse.GetResultFromHttpResponses(valResult);
             }
 
-            var report = new CustomerPreferenceReport();
-
-            foreach (var customer in preferenceForm.Customers)
-            {
-                report = customer.GenerateReport(_report);
-            }
-
-            return report;
+            return Customer.GenerateAllCustomersReport(form.Customers, _report);
         }
     }
 }

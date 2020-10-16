@@ -17,5 +17,10 @@
         /// Check if SpecificDaysOfWeek has value. When DaysOfWeek is selected as type
         /// </summary>
         public static ApiOffence SpecificDaysOfWeekMustHaveValue => "specificDaysOfWeek_must_be_specified";
+
+        /// <summary>
+        /// Check if SpecificDaysOfWeek has value. When DaysOfWeek is selected as type
+        /// </summary>
+        public static ApiOffence CustomerCannotBeNull => "customer_cannot_be_null";
     }
 }

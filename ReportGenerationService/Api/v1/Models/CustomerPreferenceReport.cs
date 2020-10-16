@@ -9,13 +9,79 @@ namespace ReportGenerationService.Api.v1.Models
     public class CustomerPreferenceReport : BaseReport<CustomerPreferenceReport, Customer>
     {
         /// <summary>
-        /// Processes Customer preference to produce report
+        /// Processes all Customers preferences to produce report
         /// </summary>
         /// <returns></returns>
-        public override CustomerPreferenceReport GenerateReport(Customer customer)
+        public override CustomerPreferenceReport GenerateReportForAll(Customer[] customers)
         {
             var subscriptionDays = getSubscriptionDays();
 
+            foreach (var customer in customers)
+            {
+                assignDaysCustomerSubscribedTo(customer, subscriptionDays);
+            }
+
+            toReport(subscriptionDays);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Processes Customer preference to produce report
+        /// </summary>
+        /// <returns></returns>
+        public override CustomerPreferenceReport GenerateReportForSingle(Customer customer)
+        {
+            var subscriptionDays = getSubscriptionDays();
+
+            assignDaysCustomerSubscribedTo(customer, subscriptionDays);
+
+            toReport(subscriptionDays);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Get days to subscribe to
+        /// </summary>
+        /// <returns></returns>
+        private Tuple<DateTime, Stack<string>>[] getSubscriptionDays()
+        {
+            var subscriptionDays = new Tuple<DateTime, Stack<string>>[NumberOfDays];
+
+            for (int i = 0; i < NumberOfDays; i++)
+            {
+                subscriptionDays[i] = Tuple.Create(DateTime.Now.AddDays(i), new Stack<string>());
+            }
+
+            return subscriptionDays;
+        }
+
+
+        /// <summary>
+        /// Converts subscribed days to Report format
+        /// </summary>
+        /// <returns></returns>
+        private void toReport(Tuple<DateTime, Stack<string>>[] subscriptionDays)
+        {
+            if (Report == null)
+            {
+                Report = new Dictionary<string, Stack<string>>();
+            }
+
+            foreach (var subscriptionDay in subscriptionDays)
+            {
+                Report[subscriptionDay.Item1.ToString("ddd dd-MMM-yyyy")] = subscriptionDay.Item2;
+            }
+        }
+
+        /// <summary>
+        /// Finds preferenceType and adds to number of days applicable to
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="subscriptionDays"></param>
+        private void assignDaysCustomerSubscribedTo(Customer customer, Tuple<DateTime, Stack<string>>[] subscriptionDays)
+        {
             // Finds preferenceType and adds to number of days applicable to
             switch (customer.CustomerPreference.Type)
             {
@@ -46,56 +112,6 @@ namespace ReportGenerationService.Api.v1.Models
                     }
                     break;
             }
-
-            if (Report == null)
-            {
-                Report = new Dictionary<string, Stack<string>>();
-            }
-
-            foreach (var tuple in subscriptionDays)
-            {
-                var key = tuple.Item1.ToString("ddd dd-MMM-yyyy");
-                if (!Report.ContainsKey(key))
-                {
-                    Report[key] = tuple.Item2;
-                }
-                else
-                {
-                    if (Report[key].Count == 0)
-                    {
-                        Report[key] = tuple.Item2;
-                    }
-                    else
-                    {
-                        foreach (var @string in tuple.Item2)
-                        {
-                            if (!Report[key].Contains(@string))
-                            {
-                                Report[key].Push(@string);
-                            }                            
-                        }
-                    }
-                    
-                }
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Get days to subscribe to
-        /// </summary>
-        /// <returns></returns>
-        private Tuple<DateTime, Stack<string>>[] getSubscriptionDays()
-        {
-            var subscriptionDays = new Tuple<DateTime, Stack<string>>[NumberOfDays];
-
-            for (int i = 0; i < NumberOfDays; i++)
-            {
-                subscriptionDays[i] = Tuple.Create(DateTime.Now.AddDays(i), new Stack<string>());
-            }
-
-            return subscriptionDays;
         }
     }
 }
